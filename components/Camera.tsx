@@ -317,12 +317,12 @@ const Camera = () => {
   const analyzePhoto = async (imageBase64: string) => {
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ inlineData: { mimeType: "image/png", data: imageBase64.split(",")[1] } }], role: "user" }],
+            contents: [{ parts: [{ text: "Try to be as human as possible. Don't answer too long." },{ inlineData: { mimeType: "image/png", data: imageBase64.split(",")[1] } }], role: "user" }],
             generationConfig: { temperature: 0.7, maxOutputTokens: 256 },
           }),
         }
@@ -343,27 +343,41 @@ const Camera = () => {
     const newChatHistory = [...chatHistory, { role: "user", content: query }];
 
     try {
+      const recentChatHistory = chatHistory.slice(-5);
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: newChatHistory.map(({ role, content }) => ({ role, parts: [{ text: content }] })),
-            generationConfig: { temperature: 0.7, maxOutputTokens: 256 },
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: `Be short and consistent ${query}` }],
+              },
+              ...chatHistory
+                .filter((msg) => msg.role !== "user") 
+                .map(({ content }) => ({
+                  role: "model",
+                  parts: [{ text: content }],
+                })),
+            ],
+            generationConfig: { temperature: 0.5, maxOutputTokens: 256,  topP: 0.5 },
           }),
         }
       );
 
       const data = await response.json();
+      console.log("Gemini AI Response:", JSON.stringify(data, null, 2));
       const aiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
       setChatHistory([...newChatHistory, { role: "AI", content: aiResponse }]);
+
       speakText(aiResponse);
     } catch (error) {
       console.error("Error getting response:", error);
     }
 
-    setUserQuery("");
+    // setUserQuery("");
   };
 
   return (
