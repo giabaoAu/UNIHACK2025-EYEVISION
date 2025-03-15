@@ -20,6 +20,7 @@ const Camera = () => {
   const [isListening, setIsListening] = useState(false);
 
   const [showPhoto, setShowPhoto] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
 
   const toggleViewPhoto = () => {
     setShowPhoto((prev) => !prev);
@@ -54,17 +55,39 @@ const Camera = () => {
     }
   };
 
+  // const startCamera = async () => {
+  //   try {
+  //     if (stream) stopCamera();
+  //     const userStream = await navigator.mediaDevices.getUserMedia({
+  //       video: true,
+  //     });
+  //     if (videoRef.current) videoRef.current.srcObject = userStream;
+  //     setStream(userStream);
+  //   } catch (error) {
+  //     console.error("Error accessing the camera:", error);
+  //   }
+  // };
+
   const startCamera = async () => {
     try {
       if (stream) stopCamera();
-      const userStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
+      
+      const constraints: MediaStreamConstraints = {
+        video: { facingMode: isFrontCamera ? "user" : "environment" }
+      };
+  
+      const userStream = await navigator.mediaDevices.getUserMedia(constraints);
       if (videoRef.current) videoRef.current.srcObject = userStream;
       setStream(userStream);
     } catch (error) {
       console.error("Error accessing the camera:", error);
     }
+  };
+
+  const flipCamera = () => {
+    setIsFrontCamera((prev) => !prev);
+    stopCamera();
+    startCamera();
   };
 
   const stopCamera = () => {
@@ -78,7 +101,7 @@ const Camera = () => {
   useEffect(() => {
     startCamera();
     return () => stopCamera();
-  }, []);
+  }, [isFrontCamera]);
 
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
@@ -257,14 +280,28 @@ const Camera = () => {
               />
               <span className="text-base mt-2">Take Photo</span> {/* Text under the icon */}
             </button>
+
+            <button
+              onClick={flipCamera}
+              className="flex flex-col items-center mt-4 cursor-pointer"
+            >
+              <Image
+                src="/Camera.png"
+                alt="camera"
+                className="rounded-4xl"
+                width={100}
+                height={100}
+              />
+              <span className="text-base mt-2">Flip Camera</span> {/* Text under the icon */}
+            </button>
         </>
       ) : (
             <div className="relative w-full f-full bg-transparent flex flex-col h-full min-h-2xl space-y-4">
               <div className="relative flex flex-col h-full min-h-2xl space-y-4">
                 <button 
                   onClick={toggleViewPhoto} 
-                  className="p-2 bg-[#FBFBFF] text-black rounded-md border-2 border-gray-500">
-                  {showPhoto ? "Hide Photo 🖼️" : "Show Photo 📷"}
+                  className="p-2 text-base bg-[#3B3B3B] text-white rounded-[48px] border-1 border-[#4D4D4D]">
+                  {showPhoto ? "Hide Photo" : "Show Photo"}
                 </button>
               
                   {showPhoto && photo && (
