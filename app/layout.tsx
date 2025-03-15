@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,10 +14,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Envision | The Magic Eye",
-  description: "This is an AI power app that helps blind users",
-};
 
 export default function RootLayout({
   children,
@@ -32,3 +30,30 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+/*
+import { Cal_Sans } from "next/font/google";
+import "./globals.css";  // Make sure your global styles are here
+
+
+// Import Cal Sans font
+const calSans = Cal_Sans({
+  variable: "--font-cal-sans",
+  subsets: ["latin"], // Include the subset you need
+});
+
+export const metadata: Metadata = {
+  title: "Envision | The Magic Eye",
+  description: "This is an AI power app that helps blind users",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className={`${calSans.variable} antialiased`}>
+        {children}
+      </body>
+    </html>
+  );
+}*/

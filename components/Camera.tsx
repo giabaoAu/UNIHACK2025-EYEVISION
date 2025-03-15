@@ -380,6 +380,8 @@ const Camera = () => {
     }
   };
 
+
+
   const analyzePhoto = async (imageBase64: string) => {
     try {
       const response = await fetch(
@@ -392,7 +394,7 @@ const Camera = () => {
               {
                 parts: [
                   {
-                    text: "Analyze this picture. Try to be as human-like as possible. Be short and concise in your answer",
+                    text: "Analyze this picture in detail.",
                   },
                   {
                     inlineData: {
@@ -408,83 +410,62 @@ const Camera = () => {
           }),
         }
       );
-
+  
       const data = await response.json();
-      const description =
+      const fullDescription =
         data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Could not analyze the image.";
-      setAnalysisResult(description);
-      speakText(description);
+        "Could not analyze the image."
+  
+      // Update chat history with the full description
       setChatHistory([
         ...chatHistory,
         { role: "user", content: "Sent a photo", image: imageBase64 },
-        { role: "AI", content: description },
+        { role: "AI", content: `Image Description: ${fullDescription}` }, // Store full description
       ]);
+  
+      // Set the summarized description
+      setAnalysisResult(fullDescription);
       setShowChat(true);
-    } catch (error) {
+    } catch (error) { 
       console.error("Error analyzing image:", error);
     }
   };
-
+  
+  
   const handleUserQuery = async (query: string = userQuery) => {
     if (!query.trim()) return;
 
-    const lastPhoto = [...chatHistory].reverse().find((msg) => msg.image)
-      ?.image;
+    const lastImageDescription = [...chatHistory]
+  .reverse()
+  .find((msg) => msg.content.startsWith("Image Description:"))
+  ?.content;
 
+  
     console.log(
-      " Last Sent Image:",
-      lastPhoto ? lastPhoto.substring(0, 50) + "..." : "No Image Found"
+      "Last Image Description:",
+      lastImageDescription || "No Description Found"
     );
-
-    const lowerCaseQuery = query.toLowerCase();
-    const isImageRelated =
-      lowerCaseQuery.includes("image") || lowerCaseQuery.includes("photo");
-
-    console.log("Should Send Image:", isImageRelated ? "Yes" : "No");
-
+  
     try {
-      const conversationHistory = chatHistory.slice(-10);
-
       let finalContents = [];
-
-      if (isImageRelated && lastPhoto) {
+  
+      if (lastImageDescription) {
         finalContents.push({
           role: "user",
-          parts: [
-            {
-              text: "This image is relevant to the question. Use it when answering.",
-            },
-            {
-              inlineData: {
-                mimeType: "image/png",
-                data: lastPhoto.split(",")[1],
-              },
-            },
-          ],
+          parts: [{ text: lastImageDescription }],
         });
       }
-
+  
+      // Add the user’s question
       finalContents.push({
         role: "user",
-        parts: [
-          {
-            text: `You are an AI assisting a blind user. Be short and concise in your response: ${query}`,
-          },
-        ],
+        parts: [{ text: `Base on the photo description provided, answer questions. You are an AI assisting a blind user. Be short and concise in your response: ${query}` }],
       });
-
-      finalContents = [
-        ...finalContents,
-        ...conversationHistory.map((msg) => ({
-          role: msg.role.toLowerCase() === "ai" ? "model" : "user",
-          parts: [{ text: msg.content }],
-        })),
-      ];
-
+  
+  
       console.log("Final Contents for AI Request:");
       console.log(JSON.stringify(finalContents, null, 2));
-
+  
       const finalResponse = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
         {
@@ -501,64 +482,65 @@ const Camera = () => {
           }),
         }
       );
-
+  
       const finalData = await finalResponse.json();
       console.log("FULL Gemini AI Response:", JSON.stringify(finalData, null, 2));
-
+  
       const aiResponse =
-        finalData?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "No response.";
-
+        finalData?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+  
       console.log("AI Answer:", aiResponse);
       setChatHistory([
         ...chatHistory,
         { role: "user", content: query },
         { role: "AI", content: aiResponse },
       ]);
-
+  
       speakText(aiResponse);
     } catch (error) {
       console.error("Error getting response:", error);
     }
   };
+  
+  
 
   return (
-    <div className="relative w-screen h-screen px-4  flex flex-col items-center justify-center bg-transparent text-white">
+    <div className="relative lg:w-2xl lg:h-2xl w-screen h-screen px-4  flex flex-col items-center justify-center bg-transparent text-white">
       {!showChat ? (
         <>
             <video
               ref={videoRef}
               autoPlay
               playsInline
-              className=" border-2 border-gray-500 rounded-lg"
+              className=" border-2 border-gray-500 rounded-3xl"
             />
             <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
             <button
             onClick={takePhoto}
-            className=" w-auto h-auto mt-4 px-2 py-2 bg-white text-black rounded-lg"
+            className=" w-auto h-auto mt-4 px-3 py-2 bg-white text-black rounded-3xl"
           >
             Capture Photo
           </button>
 
         </>
       ) : (
-        <div className="absolute inset-0 bg-gray-900 flex flex-col p-6 space-y-4">
+        <div className="absolute bg-transparent inset-0 flex flex-col p-6 h-full min-h-2xl space-y-4">
           {photo && (
             <img
               src={photo}
               alt="Captured"
-              className="w-full max-h-100 object-contain mb-4"
+              className="w-full max-h-100 object-contain mb-4 rounded-3xl"
             />
           )}
           <h2 className="text-xl font-bold">Chat about the Image</h2>
-          <div className="flex-1 overflow-auto p-4 bg-gray-800 rounded-md">
+          <div className="flex-col flex gap-2 px-4 overflow-auto bg-gray-800 rounded-md">
             {chatHistory.map((msg, index) => (
               <div
                 key={index}
-                className={`p-2 my-2 rounded-md ${
+                className={`p-2 my-2 rounded-md w-fit ${
                   msg.role === "user"
-                    ? "bg-blue-600 text-right"
-                    : "bg-gray-600 text-left"
+                    ? "bg-gray-600 ml-auto text-white text-right"
+                    : "bg-gray-300 text-black text-left"
                 }`}
               >
                 {msg.content}
@@ -568,7 +550,7 @@ const Camera = () => {
           <div className="flex space-x-2">
             <button
               onClick={isListening ? stopListening : startListening}
-              className="p-2 bg-red-600 w-full rounded-md"
+              className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md"
             >
               {isListening ? "Stop 🎙️" : "Speak 🎤"}
             </button>

@@ -22,5 +22,61 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  font-family: var(--font-cal-sans), sans-serif;
+}
+
+/* Add this to your globals.css */
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-in {
+  animation: floatIn 1.0s ease-out forwards; /* Adjust timing as needed */
+}
+
+/* In your globals.css or a separate CSS file */
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.typing-effect {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  border-right: 4px solid white; /* Cursor effect */
+  animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;
+}
+
+/* In your globals.css or a separate CSS file */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 2s ease-out forwards; /* 2s for fade duration, adjust as needed */
 }
