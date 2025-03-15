@@ -174,6 +174,7 @@ const Camera = () => {
   
       // Set the summarized description
       setAnalysisResult(fullDescription);
+      //speakText(fullDescription);
       setShowChat(true);
     } catch (error) { 
       console.error("Error analyzing image:", error);
@@ -267,33 +268,35 @@ const Camera = () => {
               <Image src="/Camera.png" alt="test" className='rounded-4xl' width={100} height={100} />  
             </button> */}
 
-            <button
-              onClick={takePhoto}
-              className="flex flex-col items-center mt-4 cursor-pointer"
-            >
-              <Image
-                src="/Camera.png"
-                alt="camera"
-                className="rounded-4xl"
-                width={100}
-                height={100}
-              />
-              <span className="text-base mt-2">Take Photo</span> {/* Text under the icon */}
-            </button>
+            <div className="flex gap-16 flex-row ">
+              <button
+                onClick={takePhoto}
+                className="flex flex-col items-center mt-4 cursor-pointer"
+              >
+                <Image
+                  src="/Camera.png"
+                  alt="camera"
+                  className="rounded-4xl"
+                  width={100}
+                  height={100}
+                />
+                <span className="text-base mt-2">Take Photo</span> {/* Text under the icon */}
+              </button>
 
-            <button
-              onClick={flipCamera}
-              className="flex flex-col items-center mt-4 cursor-pointer"
-            >
-              <Image
-                src="/Camera.png"
-                alt="camera"
-                className="rounded-4xl"
-                width={100}
-                height={100}
-              />
-              <span className="text-base mt-2">Flip Camera</span> {/* Text under the icon */}
-            </button>
+              <button
+                onClick={flipCamera}
+                className="flex flex-col items-center mt-4 cursor-pointer"
+              >
+                <Image
+                  src="/Camera.png"
+                  alt="camera"
+                  className="rounded-4xl"
+                  width={100}
+                  height={100}
+                />
+                <span className="text-base mt-2">Flip Camera</span> {/* Text under the icon */}
+              </button>
+            </div>
         </>
       ) : (
             <div className="relative w-full f-full bg-transparent flex flex-col h-full min-h-2xl space-y-4">
