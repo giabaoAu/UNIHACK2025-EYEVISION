@@ -4,10 +4,9 @@ import Link from 'next/link'
 
 const Footer = () => {
   return (
-    <div className='flex flex-col items-center gap-5 mx-auto pt-20 py-5 px-2 bg-transparent text-white'>
+    <div className='flex flex-col items-center gap-5 mx-auto pt-20 py-5 px-2 bg-black text-white'>
       
-      {/* Contributors Section */}
-      <h4 className='text-xl mx-auto'>OUR CONTRIBUTORS</h4>
+      <h4 className='text-xl mx-auto'>OUR CONTRIBUTOR</h4>
       <div className='flex flex-row gap-6'>
         <Link href='https://www.linkedin.com/in/bao-au-84bb41229/'>
           <Image src="/baoau.jpg" alt="contributor-img" className='rounded-4xl' width={100} height={100} />
@@ -26,12 +25,8 @@ const Footer = () => {
         </Link>
       </div>
 
-      {/* Divider */}
-      <div className='my-5 w-full border-t border-gray-600'></div>
-
-      {/* Copyright Section */}
-      <div className='mt-5'>
-        <p className='text-sm text-center'>&copy; {new Date().getFullYear()} EYEVISION. All rights reserved.</p>
+      <div className='mt-10'>
+        <p className='text-sm'>&copy; {new Date().getFullYear()} EYEVISION. All rights reserved.</p>
       </div>
     </div>
   )

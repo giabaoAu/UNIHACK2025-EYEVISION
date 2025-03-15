@@ -278,6 +278,51 @@ const Camera = () => {
                 </div>
 
                 <div className="flex justify-center space-x-2 gap-2">
+
+                {/* Voice Button */}
+                <button
+                  onClick={isListening ? stopListening : startListening}
+                  className="flex flex-col items-center p-2 cursor-pointer"
+                >
+                  {isListening ? (
+                    <Image
+                      src="/StopMicrophone.png"
+                      alt="stop microphone"
+                      className="rounded-4xl"
+                      width={100}
+                      height={100}
+                    />
+                  ) : (
+                    <Image
+                      src="/Microphone.png"
+                      alt="microphone"
+                      className="rounded-4xl"
+                      width={100}
+                      height={100}
+                    />
+                  )}
+                  <span className="text-sm mt-2">{isListening ? "Stop" : "Voice"}</span> {/* Text under the icon */}
+                </button>
+
+                {/* Retake Button */}
+                <button
+                  onClick={captureAgain}
+                  className="flex flex-col items-center p-2 cursor-pointer"
+                >
+                  <Image
+                    src="/GoBack.png"
+                    alt="retake"
+                    className="rounded-4xl"
+                    width={100}
+                    height={100}
+                  />
+                  <span className="text-sm mt-2">Retake</span> {/* Text under the icon */}
+                </button>
+              </div>
+
+
+                
+                {/* <div className="flex justify-center space-x-2 gap-2">
                   <button
                     onClick={isListening ? stopListening : startListening}
                     className="p-2 cursor-pointer"
@@ -286,6 +331,7 @@ const Camera = () => {
                     {isListening ? <Image src="/StopMicrophone.png" alt="test" className='rounded-4xl' width={100} height={100} /> : 
                     <Image src="/Microphone.png" alt="test" className='rounded-4xl' width={100} height={100} />  }
                   </button>
+                  
                 
                   <button
                   onClick={captureAgain}
@@ -293,7 +339,9 @@ const Camera = () => {
                   >
                     <Image src="/GoBack.png" alt="test" className='rounded-4xl' width={100} height={100} />  
                   </button>
-                </div>
+                </div> */}
+
+                
             </div>
       </div>
     )}
