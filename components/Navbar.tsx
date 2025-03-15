@@ -4,9 +4,11 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-    <header className='px-5 py-10 bg-[#BBE5ED]'>
+    <header className='px-5 py-10 bg-transparent'>
       <nav className='flex'>
-        <Link href='/'>
+        <Link 
+          href='/'
+        >
           <Image className='rounded-xl' src='/logo.jpg' alt='logo-img' width={70} height={70} />
         </Link>
       </nav>
