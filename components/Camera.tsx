@@ -14,7 +14,7 @@ const Camera = () => {
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [userQuery, setUserQuery] = useState("");
   const [chatHistory, setChatHistory] = useState<
-    { role: string; content: string }[]
+    { role: string; content: string; image?: string}[]
   >([]);
   const [isListening, setIsListening] = useState(false);
 
@@ -99,7 +99,7 @@ const Camera = () => {
               {
                 parts: [
                   {
-                    text: "You are an AI assisting a blind user in understanding an image.",
+                    text: "Try to be as human as possible.",
                   },
                   {
                     inlineData: {
@@ -121,7 +121,12 @@ const Camera = () => {
         data?.candidates?.[0]?.content?.parts?.[0]?.text ||
         "Could not analyze the image.";
       setAnalysisResult(description);
-      setChatHistory([{ role: "AI", content: description }]);
+      speakText(description); 
+      setChatHistory([
+        ...chatHistory,
+        { role: "user", content: "Sent a photo", image: imageBase64 }, 
+        { role: "AI", content: description }  
+      ]);
       setShowChat(true);
     } catch (error) {
       console.error("Error analyzing image:", error);
@@ -130,12 +135,12 @@ const Camera = () => {
 
   const handleUserQuery = async (query: string = userQuery) => {
     if (!query.trim()) return;
-    const newChatHistory = [...chatHistory, { role: "user", content: query }];
 
-    console.log('here', analysisResult)
+    const lastPhoto = chatHistory.find(msg => msg.image)?.image;
+    console.log('HERE', lastPhoto)
 
     try {
-      // Include the full conversation history, but limit to last 10 messages for context
+
       const conversationHistory = chatHistory.slice(-10);
 
       const response = await fetch(
@@ -145,25 +150,27 @@ const Camera = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             contents: [
-              // First, provide context about the image if it exists
-              ...(analysisResult
-                ? [
-                    {
-                      role: "model",
-                      parts: [{ text: `The image shows: ${analysisResult}` }],
-                    },
+              ...(lastPhoto ? [
+                {
+                  role: "user",
+                  parts: [
+                    { text: "Refer to this image while answering the question." },
+                    { inlineData: { mimeType: "image/png", data: lastPhoto.split(",")[1] } }
                   ]
-                : []),
-              
+                }
+              ] : []),
+
+              {
+                role: "user",
+                parts: [
+                  { text: `You are an AI assisting a blind user in understanding an image. Be relatively short and concise in your answer ${query}` }
+                ]
+              },
+
               ...conversationHistory.map((msg) => ({
                 role: msg.role.toLowerCase() === "ai" ? "model" : "user",
                 parts: [{ text: msg.content }],
-              })),
-         
-              {
-                role: "user",
-                parts: [{ text: `${query}` }],
-              },
+              }))
             ],
             generationConfig: {
               temperature: 0.7,
@@ -176,14 +183,19 @@ const Camera = () => {
       );
 
       const data = await response.json();
+      console.log('FULL Gemini AI Response:', JSON.stringify(data, null, 2));
+
       const aiResponse =
         data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
-      setChatHistory([...newChatHistory, { role: "AI", content: aiResponse }]);
+
+      console.log("AI Answer:", aiResponse);
+      setChatHistory([...conversationHistory,{ role: "user", content: query },  { role: "AI", content: aiResponse }]);
       speakText(aiResponse);
     } catch (error) {
       console.error("Error getting response:", error);
     }
-  };
+};
+
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-black text-white">
