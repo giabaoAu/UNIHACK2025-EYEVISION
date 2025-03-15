@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'CalSans';
+  src: url('../public/fonts/CalSans-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: bold;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-sans: 'CalSans', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/*
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,21 +41,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /*
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);*/
-}
-
-/* styles/globals.css */
-@font-face {
-  font-family: 'CalSans-SemiBold';
-  src: url('/CalSans-SemiBold.woff2') format('woff2');
-  font-weight: 600; /* Semi-Bold weight */
-  font-style: normal;
-}
-
-body {
-  font-family: 'CalSans-SemiBold', sans-serif;
+  --font-mono: var(--font-geist-mono);
 }
 
 
@@ -36,9 +56,9 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  /* font-family: Arial, Helvetica, sans-serif; */
-  font-family: var(--font-cal-sans), sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
+*/
 
 /* Add this to your globals.css */
 @keyframes floatIn {
@@ -62,7 +82,7 @@ body {
     width: 0;
   }
   100% {
-    width: 100%;
+    width: 75%;
   }
 }
 
@@ -93,4 +113,23 @@ body {
 
 .fade-in {
   animation: fadeIn 2s ease-out forwards; /* 2s for fade duration, adjust as needed */
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555555;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777777;
 }

@@ -34,16 +34,27 @@ export function AuroraBackgroundDemo() {
 "use client";
 import React from "react";
 import Camera from "@/components/Camera";
+import { cn } from "@/lib/utils";
+
+import localFont from "next/font/local";
+
+const calFont = localFont({
+  src: "../public/fonts/CalSans-SemiBold.woff2",
+  variable: "--font-cal",
+  preload: true,
+  display: "swap",
+});
+
 
 export function Background() {
-  return (
-    <div className="bg-transparent py-2 lg:h-screen max-h-[500px] text-xl">
+  return (  
+    <div className="bg-transparent py-2 text-xl">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div className="flex justify-center items-center text-3xl lg:text-5xl font-bold text-white text-center ">  
-          <div>
-            <h2 className="float-in">EYEVISION: AI POWER ASSISSTANT <br></br></h2>
-            <span className="typing-effect">Your vision, our mission</span>
-            <div className="font-extralight text-base md:text-4xl text-neutral-200 py-4 float-in">
+        <div className={cn("flex justify-center items-center text-3xl lg:text-5xl font-bold text-white text-center", calFont.className)}>  
+          <div className="float-in">
+            <h2>EYEVISION: AI-POWERED ASSISTANCE <br></br></h2>
+            <span className=" typing-effect">Your vision, our mission</span>
+            <div className="font-extralight text-base md:text-4xl text-neutral-200 py-4">
               Take a photo, and here comes the magic
             </div>
           </div>
@@ -52,7 +63,6 @@ export function Background() {
         <div className="fade-in">
           <Camera/>
         </div>
-        
       </div>
     </div>
   );

@@ -24,6 +24,10 @@ const {
             },
           },
         },
+        fontFamily: {
+          sans: ["var(--font-sans)", ...fontFamily.sans],
+          // cfont: ['var(--font-cfont)', ...fontFamily.sans],
+        },
       },
     },
     plugins: [addVariablesForColors],
