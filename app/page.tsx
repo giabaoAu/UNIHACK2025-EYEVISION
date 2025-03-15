@@ -8,9 +8,9 @@ export default function Home() {
   return (
     <>
     <LandingBackground imagePath='/hero_bg.jpg'>
-      <Navbar />
-      <Background />
-      <Footer />
+        <Navbar />
+        <Background />
+        <Footer />
     </LandingBackground>
     </> 
   );

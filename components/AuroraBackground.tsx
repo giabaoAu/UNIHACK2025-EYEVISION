@@ -37,16 +37,22 @@ import Camera from "@/components/Camera";
 
 export function Background() {
   return (
-    <div className="gap-2 bg-transparent py-5 text-xl">
+    <div className="bg-transparent py-2 lg:h-screen max-h-[500px] text-xl">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <div className="text-3xl lg:text-5xl font-bold text-white text-center float-in pt-10">  
-            EYEVISION: AI POWER ASSISSTANT <br></br>
+        <div className="flex justify-center items-center text-3xl lg:text-5xl font-bold text-white text-center ">  
+          <div>
+            <h2 className="float-in">EYEVISION: AI POWER ASSISSTANT <br></br></h2>
             <span className="typing-effect">Your vision, our mission</span>
             <div className="font-extralight text-base md:text-4xl text-neutral-200 py-4 float-in">
               Take a photo, and here comes the magic
             </div>
           </div>
-        <Camera />
+        </div>
+
+        <div className="fade-in">
+          <Camera/>
+        </div>
+        
       </div>
     </div>
   );

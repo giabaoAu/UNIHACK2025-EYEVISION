@@ -7,7 +7,7 @@ const Navbar = () => {
     <header className='px-5 py-5 bg-transparent'>
       <nav className='flex items-center justify-center'>
         <Link href='/'> 
-          <Image className='rounded-xl bg-amber-50 bg-transparent' src='/finalLogo.png' alt='logo-img' width={200} height={100} />
+          <Image className='rounded-xl bg-transparent fade-in' src='/finalLogo.png' alt='logo-img' width={150} height={80} />
         </Link>
       </nav>
     </header>

@@ -502,25 +502,23 @@ const Camera = () => {
     }
   };
   
-  
-
   return (
-    <div className="relative lg:w-2xl lg:h-2xl w-screen h-screen px-4  flex flex-col items-center justify-center bg-transparent text-white">
+    <div className="relative w-full h-full px-4 mx-auto flex flex-col items-center justify-center bg-transparent text-white">
       {!showChat ? (
         <>
             <video
               ref={videoRef}
               autoPlay
               playsInline
-              className=" border-2 border-gray-500 rounded-3xl"
+              className="border-2 border-gray-500 rounded-3xl"
             />
             <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
             <button
-            onClick={takePhoto}
-            className=" w-auto h-auto mt-4 px-3 py-2 bg-white text-black rounded-3xl"
-          >
-            Capture Photo
-          </button>
+             onClick={takePhoto}
+             className="w-auto h-auto mt-4 px-3 py-2 bg-white text-black rounded-3xl"
+            >
+              Capture Photo
+            </button>
 
         </>
       ) : (
@@ -533,11 +531,11 @@ const Camera = () => {
             />
           )}
           <h2 className="text-xl font-bold">Chat about the Image</h2>
-          <div className="flex-col flex gap-2 px-4 overflow-auto bg-gray-800 rounded-md">
+          <div className="p-2 overflow-auto min-h-[30vh] max-h-[70vh] bg-gray-800 rounded-md">
             {chatHistory.map((msg, index) => (
               <div
                 key={index}
-                className={`p-2 my-2 rounded-md w-fit ${
+                className={`my-2 mx-2 text-sm rounded-md w-fit px-2 ${
                   msg.role === "user"
                     ? "bg-gray-600 ml-auto text-white text-right"
                     : "bg-gray-300 text-black text-left"
@@ -547,12 +545,19 @@ const Camera = () => {
               </div>
             ))}
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 gap-4">
             <button
               onClick={isListening ? stopListening : startListening}
               className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md"
             >
               {isListening ? "Stop 🎙️" : "Speak 🎤"}
+            </button>
+          
+            <button
+             onClick={takePhoto}
+             className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md"
+            >
+              Capture Again 📸
             </button>
           </div>
         </div>
