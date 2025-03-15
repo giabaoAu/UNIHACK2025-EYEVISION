@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
-@font-face {
+/* @font-face {
   font-family: 'CalSans';
   src: url('../public/fonts/CalSans-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: bold;
   font-display: swap;
-}
+} */
 
 @theme inline {
   --color-background: var(--background);
@@ -82,7 +82,7 @@ body {
     width: 0;
   }
   100% {
-    width: 75%;
+    width: 100%;
   }
 }
 

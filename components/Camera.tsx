@@ -236,17 +236,31 @@ const Camera = () => {
               className="border-2 border-gray-500 rounded-3xl"
             />
             <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-            <button
+
+            {/* <button
              onClick={takePhoto}
              className="mt-4 cursor-pointer"
             >
               <Image src="/Camera.png" alt="test" className='rounded-4xl' width={100} height={100} />  
-            </button>
+            </button> */}
 
+            <button
+              onClick={takePhoto}
+              className="flex flex-col items-center mt-4 cursor-pointer"
+            >
+              <Image
+                src="/Camera.png"
+                alt="camera"
+                className="rounded-4xl"
+                width={100}
+                height={100}
+              />
+              <span className="text-base mt-2">Take Photo</span> {/* Text under the icon */}
+            </button>
         </>
       ) : (
             <div className="relative w-full f-full bg-transparent flex flex-col h-full min-h-2xl space-y-4">
-              <div className="relative flex flex-col p-6 h-full min-h-2xl space-y-4">
+              <div className="relative flex flex-col h-full min-h-2xl space-y-4">
                 <button 
                   onClick={toggleViewPhoto} 
                   className="p-2 bg-[#FBFBFF] text-black rounded-md border-2 border-gray-500">
@@ -262,7 +276,7 @@ const Camera = () => {
                 )}
 
                 <h2 className="text-xl font-bold">Chat about the Image</h2>
-                <div className="p-2 overflow-auto h-[200px] bg-[#253031] rounded-md">
+                <div className="p-2 overflow-auto h-[300px] bg-transparent rounded-md">
                   {chatHistory.map((msg, index) => (
                     <div
                       key={index}
@@ -301,7 +315,7 @@ const Camera = () => {
                       height={100}
                     />
                   )}
-                  <span className="text-sm mt-2">{isListening ? "Stop" : "Voice"}</span> {/* Text under the icon */}
+                  <span className="text-base mt-2">{isListening ? "Stop" : "Voice"}</span> {/* Text under the icon */}
                 </button>
 
                 {/* Retake Button */}
@@ -316,7 +330,7 @@ const Camera = () => {
                     width={100}
                     height={100}
                   />
-                  <span className="text-sm mt-2">Retake</span> {/* Text under the icon */}
+                  <span className="text-base mt-2">Retake</span> {/* Text under the icon */}
                 </button>
               </div>
 

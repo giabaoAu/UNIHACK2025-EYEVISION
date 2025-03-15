@@ -40,11 +40,7 @@ import localFont from "next/font/local";
 
 const calFont = localFont({
   src: "../public/fonts/CalSans-SemiBold.woff2",
-  variable: "--font-cal",
-  preload: true,
-  display: "swap",
 });
-
 
 export function Background() {
   return (  
@@ -52,8 +48,8 @@ export function Background() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className={cn("flex justify-center items-center text-3xl lg:text-5xl font-bold text-white text-center", calFont.className)}>  
           <div className="float-in">
-            <h2>EYEVISION: AI-POWERED ASSISTANCE <br></br></h2>
-            <span className=" typing-effect">Your vision, our mission</span>
+            <h2 className="font-bold">EYEVISION: AI-POWERED ASSISTANCE FOR THE BLIND<br></br></h2>
+            <span className="text-2xl typing-effect">Your vision, our mission</span>
             <div className="font-extralight text-base md:text-4xl text-neutral-200 py-4">
               Take a photo, and here comes the magic
             </div>
