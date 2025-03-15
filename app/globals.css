@@ -8,9 +8,23 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  /*
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-geist-mono);*/
 }
+
+/* styles/globals.css */
+@font-face {
+  font-family: 'CalSans-SemiBold';
+  src: url('/CalSans-SemiBold.woff2') format('woff2');
+  font-weight: 600; /* Semi-Bold weight */
+  font-style: normal;
+}
+
+body {
+  font-family: 'CalSans-SemiBold', sans-serif;
+}
+
 
 @media (prefers-color-scheme: dark) {
   :root {

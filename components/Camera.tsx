@@ -435,10 +435,7 @@ const Camera = () => {
   const handleUserQuery = async (query: string = userQuery) => {
     if (!query.trim()) return;
 
-    const lastImageDescription = [...chatHistory]
-  .reverse()
-  .find((msg) => msg.content.startsWith("Image Description:"))
-  ?.content;
+    const lastImageDescription = [...chatHistory].reverse().find((msg) => msg.content.startsWith("Image Description:"))?.content;
 
   
     console.log(
@@ -501,6 +498,8 @@ const Camera = () => {
       console.error("Error getting response:", error);
     }
   };
+
+
   
   return (
     <div className="relative w-full h-full px-4 mx-auto flex flex-col items-center justify-center bg-transparent text-white">
@@ -548,14 +547,14 @@ const Camera = () => {
           <div className="flex space-x-2 gap-4">
             <button
               onClick={isListening ? stopListening : startListening}
-              className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md"
+              className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md border-2 border-gray-500"
             >
               {isListening ? "Stop 🎙️" : "Speak 🎤"}
             </button>
           
             <button
              onClick={takePhoto}
-             className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md"
+             className="p-2 bg-[#FBFBFF] w-[40vw] mx-auto text-black rounded-md border-2 border-gray-500"
             >
               Capture Again 📸
             </button>
