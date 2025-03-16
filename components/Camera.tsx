@@ -4,8 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { speakText } from "./Speech";
 import Image from 'next/image'
 
-//const GEMINI_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-const GEMINI_API_KEY = "AIzaSyB9yGCCrNtF7qceSWNa1OZsJ7A6jXkIbQg";
+const GEMINI_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
