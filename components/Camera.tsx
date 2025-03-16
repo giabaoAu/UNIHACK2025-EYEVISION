@@ -4,7 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import { speakText } from "./Speech";
 import Image from 'next/image'
 
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+//const GEMINI_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const GEMINI_API_KEY = "AIzaSyB9yGCCrNtF7qceSWNa1OZsJ7A6jXkIbQg";
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -131,8 +132,125 @@ const Camera = () => {
     startCamera();
   }
 
+  // const analyzePhoto = async (imageBase64: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           contents: [
+  //             {
+  //               parts: [
+  //                 {
+  //                   text: "Analyze this picture in detail.",
+  //                 },
+  //                 {
+  //                   inlineData: {
+  //                     mimeType: "image/png",
+  //                     data: imageBase64.split(",")[1],
+  //                   },
+  //                 },
+  //               ],
+  //               role: "user",
+  //             },
+  //           ],
+  //           generationConfig: { temperature: 0.7, maxOutputTokens: 256 },
+  //         }),
+  //       }
+  //     );
+  
+  //     const data = await response.json();
+  //     const fullDescription =
+  //       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+  //       "Could not analyze the image."
+      
+      
+  //     // Update chat history with the full description
+  //     setChatHistory([
+  //       ...chatHistory,
+  //       { role: "user", content: "Sent a photo", image: imageBase64 },
+  //       { role: "AI", content: `Image Description: ${fullDescription}` }, // Store full description
+  //     ]);
+  
+  //     // Set the summarized description
+  //     setAnalysisResult(fullDescription);
+  //     //speakText(fullDescription);
+  //     setShowChat(true);
+  //   } catch (error) { 
+  //     console.error("Error analyzing image:", error);
+  //   }
+  // };
+  
+  // const handleUserQuery = async (query: string = userQuery) => {
+  //   if (!query.trim()) return;
+
+  //   const lastImageDescription = [...chatHistory].reverse().find((msg) => msg.content.startsWith("Image Description:"))?.content;
+  //   console.log(
+  //     "Last Image Description:",
+  //     lastImageDescription || "No Description Found"
+  //   );
+  
+  //   try {
+  //     let finalContents = [];
+  
+  //     if (lastImageDescription) {
+  //       finalContents.push({
+  //         role: "user",
+  //         parts: [{ text: lastImageDescription }],
+  //       });
+  //     }
+  
+  //     // Add the user’s question
+  //     finalContents.push({
+  //       role: "user",
+  //       parts: [{ text: `Base on the photo description provided, answer questions. You are an AI assisting a blind user. Be short and concise in your response: ${query}` }],
+  //     });
+  
+  
+  //     console.log("Final Contents for AI Request:");
+  //     console.log(JSON.stringify(finalContents, null, 2));
+  
+  //     const finalResponse = await fetch(
+  //       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           contents: finalContents,
+  //           generationConfig: {
+  //             temperature: 0.3,
+  //             maxOutputTokens: 256,
+  //             topP: 0.8,
+  //             topK: 40,
+  //           },
+  //         }),
+  //       }
+  //     );
+  
+  //     const finalData = await finalResponse.json();
+  //     console.log("FULL Gemini AI Response:", JSON.stringify(finalData, null, 2));
+  
+  //     const aiResponse =
+  //       finalData?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+  
+  //     console.log("AI Answer:", aiResponse);
+  //     setChatHistory([
+  //       ...chatHistory,
+  //       { role: "user", content: query },
+  //       { role: "AI", content: aiResponse },
+  //     ]);
+  
+  //     speakText(aiResponse);
+  //   } catch (error) {
+  //     console.error("Error getting response:", error);
+  //   }
+  // };
+
   const analyzePhoto = async (imageBase64: string) => {
     try {
+      // Get Full Description
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
         {
@@ -163,33 +281,64 @@ const Camera = () => {
       const data = await response.json();
       const fullDescription =
         data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Could not analyze the image."
+        "Could not analyze this image, please retake the picture.";
   
-      // Update chat history with the full description
+      console.log("Full Description:", fullDescription);
+  
+      // Generate a Summary of the Full Description
+      const summaryResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [
+                  {
+                    text: `Summarize this image description in one short, concise sentence: ${fullDescription}`,
+                  },
+                ],
+              },
+            ],
+            generationConfig: { temperature: 0.5, maxOutputTokens: 50 },
+          }),
+        }
+      );
+  
+      const summaryData = await summaryResponse.json();
+      const summary =
+        summaryData?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "Summary not available.";
+  
+      console.log("Summary:", summary);
+  
+      // Update chat history: Store full description for AI but display summary to the user
       setChatHistory([
         ...chatHistory,
         { role: "user", content: "Sent a photo", image: imageBase64 },
-        { role: "AI", content: `Image Description: ${fullDescription}` }, // Store full description
+        { role: "AI", content: `Image Summary: ${summary}` }, // Store only the summary in chat
       ]);
   
-      // Set the summarized description
       setAnalysisResult(fullDescription);
-      //speakText(fullDescription);
+  
+      speakText(summary);
+  
       setShowChat(true);
-    } catch (error) { 
+    } catch (error) {
       console.error("Error analyzing image:", error);
     }
   };
   
-  
   const handleUserQuery = async (query: string = userQuery) => {
     if (!query.trim()) return;
-
-    const lastImageDescription = [...chatHistory].reverse().find((msg) => msg.content.startsWith("Image Description:"))?.content;
-
+  
+    // Use the stored full description for AI queries
+    const lastImageDescription = analysisResult;
   
     console.log(
-      "Last Image Description:",
+      "Last Image Description (Used for AI Analysis):",
       lastImageDescription || "No Description Found"
     );
   
@@ -206,9 +355,8 @@ const Camera = () => {
       // Add the user’s question
       finalContents.push({
         role: "user",
-        parts: [{ text: `Base on the photo description provided, answer questions. You are an AI assisting a blind user. Be short and concise in your response: ${query}` }],
+        parts: [{ text: `Based on the photo description provided, answer questions. Be short and concise. If the image description does not contain relevant information, attempt to answer using general knowledge. ${query}` }],
       });
-  
   
       console.log("Final Contents for AI Request:");
       console.log(JSON.stringify(finalContents, null, 2));
@@ -234,7 +382,7 @@ const Camera = () => {
       console.log("FULL Gemini AI Response:", JSON.stringify(finalData, null, 2));
   
       const aiResponse =
-        finalData?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+        finalData?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I can not answer this question. Please retake the picture.";
   
       console.log("AI Answer:", aiResponse);
       setChatHistory([
@@ -248,6 +396,8 @@ const Camera = () => {
       console.error("Error getting response:", error);
     }
   };
+  
+  
   
   return (
     <div className="relative w-full h-full px-4 mx-auto flex flex-col items-center justify-center bg-transparent text-white">
