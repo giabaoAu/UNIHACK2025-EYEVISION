@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Envision | The Magic Eye",
+  title: "Eyevision | The Magic Eye",
   description: "This is an AI power app that helps blind users",
 };
 
